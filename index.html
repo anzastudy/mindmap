@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mindmap</title>
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <style>
+    html, body { height: 100%; margin: 0; background: #0b1020; color: #e5e7eb; }
+    #mindmap { height: 100vh; }
+    .toolbar { position: fixed; right: 12px; bottom: 12px; z-index: 10; }
+  </style>
+  <script src="./libs/d3.min.js"></script>
+  <script src="./libs/markmap-view.min.js"></script>
+  <link rel="stylesheet" href="./libs/markmap-toolbar.css">
+  <script src="./libs/markmap-toolbar.min.js"></script>
+</head>
+<body>
+  <svg id="mindmap"></svg>
+  <div class="toolbar" id="toolbar"></div>
+  <script>
+    async function init() {
+      const res = await fetch('content.md');
+      const md = await res.text();
+      const { markmap } = window;
+      const { Transformer, Markmap } = markmap;
+      const transformer = new Transformer();
+      const { root } = transformer.transform(md);
+      const mm = Markmap.create('#mindmap', {}, root);
+      const { Toolbar } = window.markmapToolbar;
+      const toolbar = new Toolbar();
+      toolbar.attach(mm);
+      document.getElementById('toolbar').append(toolbar.render());
+    }
+    init();
+  </script>
+</body>
+</html>
